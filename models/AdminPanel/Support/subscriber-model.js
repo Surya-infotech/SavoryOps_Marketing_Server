@@ -11,10 +11,11 @@ const subscriberSchema = new mongoose.Schema(
         source: {
             type: String,
             default: "Marketing Website"
+        },
+        createdAt: {
+            type: String,
+            default: () => new Date().toISOString()
         }
-    },
-    {
-        timestamps: true
     }
 );
 

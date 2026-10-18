@@ -27,10 +27,11 @@ const contactUsSchema = new mongoose.Schema(
             type: String,
             required: [true, "Message is required"],
             trim: true
+        },
+        createdAt: {
+            type: String,
+            default: () => new Date().toISOString()
         }
-    },
-    {
-        timestamps: true
     }
 );
 

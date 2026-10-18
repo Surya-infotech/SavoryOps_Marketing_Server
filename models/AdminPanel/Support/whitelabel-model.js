@@ -42,10 +42,15 @@ const whiteLabelSchema = new mongoose.Schema(
             type: String,
             enum: ["Pending", "Contacted", "In Progress", "Closed"],
             default: "Pending"
-        }
-    },
-    {
-        timestamps: true
+        },
+        createdAt: {
+            type: String,
+            default: () => new Date().toISOString()
+        },
+        updatedAt: {
+            type: String,
+            default: () => new Date().toISOString()
+        },
     }
 );
 
