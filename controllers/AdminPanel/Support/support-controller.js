@@ -194,23 +194,6 @@ const add_subscriber = async (req, res) => {
     }
 };
 
-/**
- * Support: Delete Subscriber
- */
-const delete_subscriber = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await Subscriber.findByIdAndDelete(id);
-        if (!deleted) {
-            return res.status(404).json({ success: false, message: "Subscriber not found" });
-        }
-        return res.status(200).json({ success: true, message: "Subscriber deleted successfully" });
-    } catch (error) {
-        console.error("Error in delete_subscriber:", error);
-        return res.status(500).json({ success: false, message: "Server error", error: error.message });
-    }
-};
-
 module.exports = {
     add_white_label,
     get_white_label,
@@ -219,6 +202,5 @@ module.exports = {
     get_contact_us,
     add_contact_us,
     get_subscribers,
-    add_subscriber,
-    delete_subscriber
+    add_subscriber
 };
