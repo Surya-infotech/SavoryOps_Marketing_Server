@@ -6,6 +6,7 @@ const adminRouter = require("./router/admin-router");
 const systemrouteradmin = require("./router/AdminPanel/system-router");
 const userrouteradmin = require("./router/AdminPanel/user-router");
 const mainrouteradmin = require("./router/AdminPanel/main-router");
+const supportrouteradmin = require("./router/AdminPanel/support-router");
 const app = express();
 
 const corsOptions = {
@@ -48,6 +49,7 @@ app.use("/admin", adminRouter);
 app.use("/Main", mainrouteradmin);
 app.use("/System", systemrouteradmin);
 app.use("/User", userrouteradmin);
+app.use("/Support", supportrouteradmin);
 
 const PORT = process.env.PORT || 8084;
 
