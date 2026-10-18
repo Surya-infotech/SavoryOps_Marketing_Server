@@ -4,18 +4,28 @@ const contactUsSchema = new mongoose.Schema(
     {
         fullname: {
             type: String,
-            required: true,
+            required: [true, "Full name is required"],
             trim: true
         },
         email: {
             type: String,
-            required: true,
+            required: [true, "Email address is required"],
             trim: true,
             lowercase: true
         },
+        phone: {
+            type: String,
+            trim: true,
+            default: ""
+        },
+        subject: {
+            type: String,
+            trim: true,
+            default: "General Inquiry"
+        },
         message: {
             type: String,
-            required: true,
+            required: [true, "Message is required"],
             trim: true
         }
     },

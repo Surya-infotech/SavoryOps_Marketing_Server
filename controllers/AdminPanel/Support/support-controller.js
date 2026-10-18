@@ -2,6 +2,10 @@ const WhiteLabel = require("../../../models/AdminPanel/Support/whitelabel-model"
 const ContactUs = require("../../../models/AdminPanel/Support/contactus-model");
 const Subscriber = require("../../../models/AdminPanel/Support/subscriber-model");
 
+// ============================================================================
+// 1. WHITE-LABEL INQUIRIES
+// ============================================================================
+
 /**
  * Public: Submit a new White-Label / Commercial License Inquiry
  */
@@ -113,7 +117,28 @@ const update_white_label_status = async (req, res) => {
 };
 
 /**
- * Support: Get all Contact Us messages
+ * Protected: Delete a White-Label Inquiry
+ */
+const delete_white_label = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await WhiteLabel.findByIdAndDelete(id);
+        if (!deleted) {
+            return res.status(404).json({ message: "Inquiry not found" });
+        }
+        return res.status(200).json({ success: true, message: "Inquiry deleted successfully" });
+    } catch (error) {
+        console.error("Error in delete_white_label:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// ============================================================================
+// 2. CONTACT US
+// ============================================================================
+
+/**
+ * Protected: Get all Contact Us messages
  */
 const get_contact_us = async (_req, res) => {
     try {
@@ -126,24 +151,66 @@ const get_contact_us = async (_req, res) => {
 };
 
 /**
- * Support: Add Contact Us message
+ * Public: Submit a Contact Us message
  */
 const add_contact_us = async (req, res) => {
     try {
-        const { fullname, email, message } = req.body;
-        if (!fullname || !email || !message) {
-            return res.status(400).json({ message: "All fields are required" });
+        const { fullname, fullName, name, email, phone, subject, message } = req.body;
+        const resolvedName = (fullname || fullName || name || "").trim();
+        if (!resolvedName) {
+            return res.status(400).json({ success: false, message: "Full Name is required" });
         }
-        const created = await ContactUs.create({ fullname, email, message });
-        return res.status(201).json({ success: true, data: created });
+        if (!email || !email.trim()) {
+            return res.status(400).json({ success: false, message: "Email address is required" });
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            return res.status(400).json({ success: false, message: "Please enter a valid email address." });
+        }
+        if (!message || !message.trim()) {
+            return res.status(400).json({ success: false, message: "Message is required" });
+        }
+        const created = await ContactUs.create({
+            fullname: resolvedName,
+            email: email.trim().toLowerCase(),
+            phone: (phone || "").trim(),
+            subject: (subject || "General Inquiry").trim(),
+            message: message.trim()
+        });
+        return res.status(201).json({
+            success: true,
+            message: "Thank you for contacting SavoryOps! We have received your message and will get back to you shortly.",
+            data: created
+        });
     } catch (error) {
         console.error("Error in add_contact_us:", error);
-        return res.status(500).json({ message: "Server error", error: error.message });
+        return res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
 };
 
 /**
- * Support: Get all Subscribers
+ * Protected: Delete a Contact Us message
+ */
+const delete_contact_us = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await ContactUs.findByIdAndDelete(id);
+        if (!deleted) {
+            return res.status(404).json({ success: false, message: "Message not found" });
+        }
+        return res.status(200).json({ success: true, message: "Message deleted successfully" });
+    } catch (error) {
+        console.error("Error in delete_contact_us:", error);
+        return res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+};
+
+// ============================================================================
+// 3. SUBSCRIBERS
+// ============================================================================
+
+/**
+ * Protected: Get all Subscribers
  */
 const get_subscribers = async (_req, res) => {
     try {
@@ -156,7 +223,7 @@ const get_subscribers = async (_req, res) => {
 };
 
 /**
- * Support: Add Subscriber
+ * Public: Add Subscriber
  */
 const add_subscriber = async (req, res) => {
     try {
@@ -194,13 +261,33 @@ const add_subscriber = async (req, res) => {
     }
 };
 
+/**
+ * Protected: Delete Subscriber
+ */
+const delete_subscriber = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await Subscriber.findByIdAndDelete(id);
+        if (!deleted) {
+            return res.status(404).json({ success: false, message: "Subscriber not found" });
+        }
+        return res.status(200).json({ success: true, message: "Subscriber deleted successfully" });
+    } catch (error) {
+        console.error("Error in delete_subscriber:", error);
+        return res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+};
+
 module.exports = {
     add_white_label,
     get_white_label,
     get_white_label_by_id,
     update_white_label_status,
+    delete_white_label,
     get_contact_us,
     add_contact_us,
+    delete_contact_us,
     get_subscribers,
-    add_subscriber
+    add_subscriber,
+    delete_subscriber
 };

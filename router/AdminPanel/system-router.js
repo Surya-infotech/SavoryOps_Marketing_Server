@@ -8,6 +8,7 @@ const { authMiddleware } = require("../../middlewares/auth-middleware");
 
 // Newsletter Subscription
 systemrouter.route("/SubscribeNewsletter").post(supportController.add_subscriber);
+systemrouter.route("/AddContactUs").post(supportController.add_contact_us);
 
 // Fiscal Year Routes
 systemrouter.route("/CheckCurrentFiscalYear").get(fiscalyearcontroller.check_current_fiscalyear);

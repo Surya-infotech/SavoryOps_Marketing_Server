@@ -15,6 +15,7 @@ supportRouter.route("/GetWhiteLabel/:id").get(authMiddleware, supportController.
 supportRouter.route("/UpdateWhiteLabelStatus/:id").put(authMiddleware, supportController.update_white_label_status);
 
 supportRouter.route("/GetContactUs").get(authMiddleware, supportController.get_contact_us);
+supportRouter.route("/DeleteContactUs/:id").delete(authMiddleware, supportController.delete_contact_us);
 supportRouter.route("/GetSubscribers").get(authMiddleware, supportController.get_subscribers);
 
 module.exports = supportRouter;
