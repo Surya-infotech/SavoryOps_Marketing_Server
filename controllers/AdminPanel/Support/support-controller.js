@@ -23,8 +23,6 @@ const add_white_label = async (req, res) => {
             return res.status(400).json({ success: false, message: "Phone / WhatsApp number is required" });
         }
 
-        const ipAddress = (req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "").toString();
-
         const newInquiry = await WhiteLabel.create({
             fullName: fullName.trim(),
             company: (company || "").trim(),
@@ -34,7 +32,6 @@ const add_white_label = async (req, res) => {
             timeline: (timeline || "Within 7 Days").trim(),
             message: (message || "").trim(),
             status: "Pending",
-            ipAddress
         });
 
         return res.status(201).json({

@@ -42,10 +42,6 @@ const whiteLabelSchema = new mongoose.Schema(
             type: String,
             enum: ["Pending", "Contacted", "In Progress", "Closed"],
             default: "Pending"
-        },
-        ipAddress: {
-            type: String,
-            default: ""
         }
     },
     {
