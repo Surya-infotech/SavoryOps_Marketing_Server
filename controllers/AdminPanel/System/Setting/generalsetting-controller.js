@@ -1,7 +1,4 @@
-﻿const GeneralSetting = require("../../../../models/AdminPanel/System/Setting/generalsetting-model");
-// SocialMedia removed
-const MiscSetting = require("../../../../models/AdminPanel/System/Setting/miscsetting-model");
-// Currency removed
+const GeneralSetting = require("../../../../models/AdminPanel/System/Setting/generalsetting-model");
 
 const get_general_setting = async (_req, res) => {
     try {
@@ -21,28 +18,16 @@ const get_general_setting = async (_req, res) => {
 const get_general_setting_for_landingpage = async (_req, res) => {
     try {
         const generalSetting = await GeneralSetting.findOne();
-        const socialMedia = null;
 
         if (!generalSetting) {
             return res.status(404).json({ message: "General setting not found" });
         }
 
-        let currencyDetails = null;
-        try {
-            const miscSetting = await MiscSetting.findOne();
-            if (miscSetting && miscSetting.currencyid) {
-                currencyDetails = null;
-            }
-        } catch (currErr) {
-            console.log("Error retrieving currency details for landing page:", currErr);
-        }
-
-        const response = {
-            generalSetting: generalSetting,
-            socialMedia: socialMedia ? socialMedia.socialmedia : [],
-            currency: currencyDetails || null
-        };
-        return res.status(200).json(response);
+        return res.status(200).json({
+            generalSetting,
+            socialMedia: [],
+            currency: null
+        });
     } catch (error) {
         console.log("Error retrieving general setting for landing page:", error);
         return res.status(500).json({ message: "Server error" });

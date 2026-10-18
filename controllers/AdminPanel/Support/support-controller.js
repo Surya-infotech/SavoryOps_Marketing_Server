@@ -60,7 +60,7 @@ const add_white_label = async (req, res) => {
         const activefiscalyear = await FiscalYear.findOne({ status: "Active" });
 
         const newInquiry = await WhiteLabel.create({
-            fiscalyearid: activefiscalyear.fiscalyearid,
+            fiscalyearid: activefiscalyear?.fiscalyearid || 1,
             fullName: fullName.trim(),
             company: (company || "").trim(),
             email: email.trim().toLowerCase(),
@@ -116,30 +116,6 @@ const get_white_label = async (_req, res) => {
 };
 
 /**
- * Protected: Get single White-Label Inquiry by ID
- */
-const get_white_label_by_id = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const inquiry = await WhiteLabel.findById(id).lean();
-        if (!inquiry) {
-            return res.status(404).json({ message: "Inquiry not found" });
-        }
-        const { timeZone, dateFormat, timeFormat } = await getMiscSettingsHelper();
-        const formattedDate = formatDateTimeHelper(inquiry.createdAt, timeZone, dateFormat, timeFormat);
-        const formattedUpdatedAt = formatDateTimeHelper(inquiry.updatedAt, timeZone, dateFormat, timeFormat);
-        inquiry.formattedDate = formattedDate;
-        inquiry.formattedCreatedAt = formattedDate;
-        inquiry.createdAtFormatted = formattedDate;
-        inquiry.formattedUpdatedAt = formattedUpdatedAt;
-        return res.status(200).json(inquiry);
-    } catch (error) {
-        console.error("Error in get_white_label_by_id:", error);
-        return res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
-
-/**
  * Protected: Update status of a White-Label Inquiry
  */
 const update_white_label_status = async (req, res) => {
@@ -169,23 +145,6 @@ const update_white_label_status = async (req, res) => {
         });
     } catch (error) {
         console.error("Error in update_white_label_status:", error);
-        return res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
-
-/**
- * Protected: Delete a White-Label Inquiry
- */
-const delete_white_label = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await WhiteLabel.findByIdAndDelete(id);
-        if (!deleted) {
-            return res.status(404).json({ message: "Inquiry not found" });
-        }
-        return res.status(200).json({ success: true, message: "Inquiry deleted successfully" });
-    } catch (error) {
-        console.error("Error in delete_white_label:", error);
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
@@ -243,7 +202,7 @@ const add_contact_us = async (req, res) => {
         const activefiscalyear = await FiscalYear.findOne({ status: "Active" });
 
         const created = await ContactUs.create({
-            fiscalyearid: activefiscalyear.fiscalyearid,
+            fiscalyearid: activefiscalyear?.fiscalyearid || 1,
             fullname: resolvedName,
             email: email.trim().toLowerCase(),
             phone: (phone || "").trim(),
@@ -319,7 +278,7 @@ const add_subscriber = async (req, res) => {
         const activefiscalyear = await FiscalYear.findOne({ status: "Active" });
 
         const created = await Subscriber.create({
-            fiscalyearid: activefiscalyear.fiscalyearid,
+            fiscalyearid: activefiscalyear?.fiscalyearid || 1,
             email: normalizedEmail,
             source: source || "Marketing Website",
             createdAt: new Date().toISOString()
@@ -335,32 +294,12 @@ const add_subscriber = async (req, res) => {
     }
 };
 
-/**
- * Protected: Delete Subscriber
- */
-const delete_subscriber = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await Subscriber.findByIdAndDelete(id);
-        if (!deleted) {
-            return res.status(404).json({ success: false, message: "Subscriber not found" });
-        }
-        return res.status(200).json({ success: true, message: "Subscriber deleted successfully" });
-    } catch (error) {
-        console.error("Error in delete_subscriber:", error);
-        return res.status(500).json({ success: false, message: "Server error", error: error.message });
-    }
-};
-
 module.exports = {
     add_white_label,
     get_white_label,
-    get_white_label_by_id,
     update_white_label_status,
-    delete_white_label,
     get_contact_us,
     add_contact_us,
     get_subscribers,
-    add_subscriber,
-    delete_subscriber
+    add_subscriber
 };
