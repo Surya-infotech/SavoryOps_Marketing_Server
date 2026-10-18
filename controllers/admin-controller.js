@@ -131,14 +131,7 @@ const getAdminDetailsById = async (req, res) => {
             role: employee.role || "Employee",
             status: employee.status,
             gender: employee.gender || "Male",
-            address: employee.address || "",
-            countryname: employee.countryname || "",
-            statename: employee.statename || "",
-            cityname: employee.cityname || "",
-            countryid: employee.countryid || "",
-            stateid: employee.stateid || "",
-            cityid: employee.cityid || "",
-            profileimage: employee.profileimage || "",
+            profileimage: "",
             createdAt: employee.createdAt || "",
             updatedAt: employee.updatedAt || ""
         };
@@ -167,22 +160,11 @@ const updateAdmin = async (req, res) => {
 
         const updateData = req.body;
 
-        if (updateData.profileimage) {
-            employee.profileimage = updateData.profileimage;
-        }
-
         employee.firstname = updateData.firstname || updateData.adminfirstname || employee.firstname;
         employee.lastname = updateData.lastname || updateData.adminlastname || employee.lastname;
         employee.email = updateData.email || employee.email;
         employee.phone = updateData.phone !== undefined ? updateData.phone : employee.phone;
-        employee.address = updateData.address !== undefined ? updateData.address : employee.address;
         employee.gender = updateData.gender || employee.gender;
-        employee.countryname = updateData.countryname !== undefined ? updateData.countryname : employee.countryname;
-        employee.statename = updateData.statename !== undefined ? updateData.statename : employee.statename;
-        employee.cityname = updateData.cityname !== undefined ? updateData.cityname : employee.cityname;
-        employee.countryid = updateData.countryid !== undefined ? updateData.countryid : employee.countryid;
-        employee.stateid = updateData.stateid !== undefined ? updateData.stateid : employee.stateid;
-        employee.cityid = updateData.cityid !== undefined ? updateData.cityid : employee.cityid;
         employee.updatedAt = new Date().toISOString();
 
         await employee.save();
