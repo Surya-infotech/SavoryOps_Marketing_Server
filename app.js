@@ -11,7 +11,7 @@ const app = express();
 
 const corsOptions = {
     origin: (origin, callback) => {
-       const allowedOrigins = [
+        const allowedOrigins = [
             "https://savoryops.com",
             "https://www.savoryops.com",
             "https://sunarise.savoryops.com",
