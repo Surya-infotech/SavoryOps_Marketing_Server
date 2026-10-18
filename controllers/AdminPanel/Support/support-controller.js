@@ -32,6 +32,8 @@ const add_white_label = async (req, res) => {
             timeline: (timeline || "Within 7 Days").trim(),
             message: (message || "").trim(),
             status: "Pending",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         });
 
         return res.status(201).json({
@@ -94,7 +96,7 @@ const update_white_label_status = async (req, res) => {
 
         const updated = await WhiteLabel.findByIdAndUpdate(
             id,
-            { status },
+            { status, updatedAt: new Date().toISOString() },
             { new: true }
         );
 
@@ -172,7 +174,9 @@ const add_contact_us = async (req, res) => {
             email: email.trim().toLowerCase(),
             phone: (phone || "").trim(),
             subject: (subject || "General Inquiry").trim(),
-            message: message.trim()
+            message: message.trim(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         });
         return res.status(201).json({
             success: true,
@@ -228,7 +232,9 @@ const add_subscriber = async (req, res) => {
         }
         const created = await Subscriber.create({
             email: normalizedEmail,
-            source: source || "Marketing Website"
+            source: source || "Marketing Website",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         });
         return res.status(201).json({
             success: true,

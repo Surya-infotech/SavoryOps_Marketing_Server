@@ -50,7 +50,7 @@ const whiteLabelSchema = new mongoose.Schema(
         updatedAt: {
             type: String,
             default: () => new Date().toISOString()
-        },
+        }
     }
 );
 
