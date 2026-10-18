@@ -42,41 +42,9 @@ const employeeSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    profileimage: {
-        type: String,
-        default: ""
-    },
     gender: {
         type: String,
         default: "Male"
-    },
-    address: {
-        type: String,
-        default: ""
-    },
-    countryname: {
-        type: String,
-        default: ""
-    },
-    statename: {
-        type: String,
-        default: ""
-    },
-    cityname: {
-        type: String,
-        default: ""
-    },
-    countryid: {
-        type: String,
-        default: ""
-    },
-    stateid: {
-        type: String,
-        default: ""
-    },
-    cityid: {
-        type: String,
-        default: ""
     },
     createdAt: {
         type: String,
