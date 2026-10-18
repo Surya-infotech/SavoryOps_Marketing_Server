@@ -178,18 +178,53 @@ const get_subscribers = async (_req, res) => {
 const add_subscriber = async (req, res) => {
     try {
         const { email, source } = req.body;
-        if (!email) {
-            return res.status(400).json({ message: "Email is required" });
+        if (!email || typeof email !== 'string' || !email.trim()) {
+            return res.status(400).json({ success: false, message: "Email address is required." });
         }
-        const existing = await Subscriber.findOne({ email: email.trim().toLowerCase() });
+        const normalizedEmail = email.trim().toLowerCase();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(normalizedEmail)) {
+            return res.status(400).json({ success: false, message: "Please enter a valid business email." });
+        }
+
+        const existing = await Subscriber.findOne({ email: normalizedEmail });
         if (existing) {
-            return res.status(200).json({ message: "Already subscribed", data: existing });
+            return res.status(200).json({
+                success: true,
+                message: "You are already subscribed to our newsletter!",
+                alreadySubscribed: true,
+                data: existing
+            });
         }
-        const created = await Subscriber.create({ email: email.trim().toLowerCase(), source: source || "Marketing Website" });
-        return res.status(201).json({ success: true, data: created });
+        const created = await Subscriber.create({
+            email: normalizedEmail,
+            source: source || "Marketing Website"
+        });
+        return res.status(201).json({
+            success: true,
+            message: "Thank you for subscribing! You're all set to receive industry insights.",
+            data: created
+        });
     } catch (error) {
         console.error("Error in add_subscriber:", error);
-        return res.status(500).json({ message: "Server error", error: error.message });
+        return res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+};
+
+/**
+ * Support: Delete Subscriber
+ */
+const delete_subscriber = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await Subscriber.findByIdAndDelete(id);
+        if (!deleted) {
+            return res.status(404).json({ success: false, message: "Subscriber not found" });
+        }
+        return res.status(200).json({ success: true, message: "Subscriber deleted successfully" });
+    } catch (error) {
+        console.error("Error in delete_subscriber:", error);
+        return res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
 };
 
@@ -202,5 +237,6 @@ module.exports = {
     get_contact_us,
     add_contact_us,
     get_subscribers,
-    add_subscriber
+    add_subscriber,
+    delete_subscriber
 };

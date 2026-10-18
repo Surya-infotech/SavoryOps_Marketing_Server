@@ -2,6 +2,7 @@ const Employee = require("../../models/AdminPanel/User/employee-model");
 const FiscalYear = require("../../models/AdminPanel/System/Setting/fiscalyear-model");
 const MiscSetting = require("../../models/AdminPanel/System/Setting/miscsetting-model");
 const WhiteLabel = require("../../models/AdminPanel/Support/whitelabel-model");
+const Subscriber = require("../../models/AdminPanel/Support/subscriber-model");
 
 const get_dashboard = async (req, res) => {
     try {
@@ -10,6 +11,7 @@ const get_dashboard = async (req, res) => {
         const totalEmployeesCount = await Employee.countDocuments();
         const activeEmployeesCount = await Employee.countDocuments({ status: true });
         const whiteLabelCount = await WhiteLabel.countDocuments();
+        const totalSubscriptionCount = await Subscriber.countDocuments();
 
         // Clean monthly summary with zeroed metrics
         const monthlySummary = Array.from({ length: 12 }, (_, i) => ({
@@ -65,7 +67,7 @@ const get_dashboard = async (req, res) => {
             totalOwnerCount: totalEmployeesCount,
             totalPriceSum: 0,
             activeSubscriptionCount: 0,
-            totalSubscriptionCount: 0
+            totalSubscriptionCount
         });
     } catch (error) {
         console.error("Error in get_dashboard controller:", error);

@@ -3,7 +3,11 @@ const systemrouter = express.Router();
 const fiscalyearcontroller = require("../../controllers/AdminPanel/System/Setting/fiscalyear-controller");
 const generalsettingcontroller = require("../../controllers/AdminPanel/System/Setting/generalsetting-controller");
 const miscsettingcontroller = require("../../controllers/AdminPanel/System/Setting/miscsetting-controller");
+const supportController = require("../../controllers/AdminPanel/Support/support-controller");
 const { authMiddleware } = require("../../middlewares/auth-middleware");
+
+// Newsletter Subscription
+systemrouter.route("/SubscribeNewsletter").post(supportController.add_subscriber);
 
 // Fiscal Year Routes
 systemrouter.route("/CheckCurrentFiscalYear").get(fiscalyearcontroller.check_current_fiscalyear);

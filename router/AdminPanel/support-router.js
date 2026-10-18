@@ -7,6 +7,7 @@ const { authMiddleware } = require("../../middlewares/auth-middleware");
 supportRouter.route("/AddWhiteLabel").post(supportController.add_white_label);
 supportRouter.route("/AddContactUs").post(supportController.add_contact_us);
 supportRouter.route("/AddSubscriber").post(supportController.add_subscriber);
+supportRouter.route("/SubscribeNewsletter").post(supportController.add_subscriber);
 
 // Protected endpoints (used by admin panel)
 supportRouter.route("/GetWhiteLabel").get(authMiddleware, supportController.get_white_label);
@@ -16,5 +17,6 @@ supportRouter.route("/DeleteWhiteLabel/:id").delete(authMiddleware, supportContr
 
 supportRouter.route("/GetContactUs").get(authMiddleware, supportController.get_contact_us);
 supportRouter.route("/GetSubscribers").get(authMiddleware, supportController.get_subscribers);
+supportRouter.route("/DeleteSubscriber/:id").delete(authMiddleware, supportController.delete_subscriber);
 
 module.exports = supportRouter;
