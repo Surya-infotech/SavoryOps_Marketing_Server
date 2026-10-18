@@ -31,10 +31,6 @@ const contactUsSchema = new mongoose.Schema(
         createdAt: {
             type: String,
             default: () => new Date().toISOString()
-        },
-        updatedAt: {
-            type: String,
-            default: () => new Date().toISOString()
         }
     }
 );

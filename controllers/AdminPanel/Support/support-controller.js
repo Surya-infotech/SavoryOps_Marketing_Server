@@ -175,8 +175,7 @@ const add_contact_us = async (req, res) => {
             phone: (phone || "").trim(),
             subject: (subject || "General Inquiry").trim(),
             message: message.trim(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
         });
         return res.status(201).json({
             success: true,
@@ -233,8 +232,7 @@ const add_subscriber = async (req, res) => {
         const created = await Subscriber.create({
             email: normalizedEmail,
             source: source || "Marketing Website",
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
         });
         return res.status(201).json({
             success: true,
