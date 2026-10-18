@@ -1,6 +1,39 @@
 const WhiteLabel = require("../../../models/AdminPanel/Support/whitelabel-model");
 const ContactUs = require("../../../models/AdminPanel/Support/contactus-model");
 const Subscriber = require("../../../models/AdminPanel/Support/subscriber-model");
+const MiscSetting = require("../../../models/AdminPanel/System/Setting/miscsetting-model");
+const moment = require("moment-timezone");
+
+const getMiscSettingsHelper = async () => {
+    try {
+        const miscSetting = await MiscSetting.findOne().lean();
+        return {
+            timeZone: miscSetting?.timeZone || "Asia/Kolkata",
+            dateFormat: miscSetting?.dateFormat || "DD/MM/YYYY",
+            timeFormat: miscSetting?.timeFormat || "hh:mm A"
+        };
+    } catch (err) {
+        console.error("Error retrieving misc settings for support:", err);
+        return {
+            timeZone: "Asia/Kolkata",
+            dateFormat: "DD/MM/YYYY",
+            timeFormat: "hh:mm A"
+        };
+    }
+};
+
+const formatDateTimeHelper = (dateString, timeZone, dateFormat, timeFormat) => {
+    if (!dateString) return "-";
+    try {
+        const m = moment.tz(dateString, timeZone);
+        if (m.isValid()) {
+            return m.format(`${dateFormat} ${timeFormat}`);
+        }
+        return String(dateString);
+    } catch {
+        return String(dateString);
+    }
+};
 
 // ============================================================================
 // 1. WHITE-LABEL INQUIRIES
@@ -56,8 +89,22 @@ const add_white_label = async (req, res) => {
  */
 const get_white_label = async (_req, res) => {
     try {
-        const inquiries = await WhiteLabel.find().sort({ createdAt: -1 });
-        return res.status(200).json(inquiries);
+        const inquiries = await WhiteLabel.find().sort({ createdAt: -1 }).lean();
+        const { timeZone, dateFormat, timeFormat } = await getMiscSettingsHelper();
+        const enrichedInquiries = inquiries.map(item => {
+            const formattedDate = formatDateTimeHelper(item.createdAt, timeZone, dateFormat, timeFormat);
+            const formattedUpdatedAt = formatDateTimeHelper(item.updatedAt, timeZone, dateFormat, timeFormat);
+            return {
+                ...item,
+                formattedDate,
+                formattedCreatedAt: formattedDate,
+                createdAtFormatted: formattedDate,
+                formattedUpdatedAt
+            };
+        });
+        return res.status(200).json({
+            inquiries: enrichedInquiries
+        });
     } catch (error) {
         console.error("Error in get_white_label:", error);
         return res.status(500).json({ message: "Server error", error: error.message });
@@ -70,10 +117,17 @@ const get_white_label = async (_req, res) => {
 const get_white_label_by_id = async (req, res) => {
     try {
         const { id } = req.params;
-        const inquiry = await WhiteLabel.findById(id);
+        const inquiry = await WhiteLabel.findById(id).lean();
         if (!inquiry) {
             return res.status(404).json({ message: "Inquiry not found" });
         }
+        const { timeZone, dateFormat, timeFormat } = await getMiscSettingsHelper();
+        const formattedDate = formatDateTimeHelper(inquiry.createdAt, timeZone, dateFormat, timeFormat);
+        const formattedUpdatedAt = formatDateTimeHelper(inquiry.updatedAt, timeZone, dateFormat, timeFormat);
+        inquiry.formattedDate = formattedDate;
+        inquiry.formattedCreatedAt = formattedDate;
+        inquiry.createdAtFormatted = formattedDate;
+        inquiry.formattedUpdatedAt = formattedUpdatedAt;
         return res.status(200).json(inquiry);
     } catch (error) {
         console.error("Error in get_white_label_by_id:", error);
@@ -141,8 +195,20 @@ const delete_white_label = async (req, res) => {
  */
 const get_contact_us = async (_req, res) => {
     try {
-        const contacts = await ContactUs.find().sort({ createdAt: -1 });
-        return res.status(200).json(contacts);
+        const contacts = await ContactUs.find().sort({ createdAt: -1 }).lean();
+        const { timeZone, dateFormat, timeFormat } = await getMiscSettingsHelper();
+        const enrichedContacts = contacts.map(item => {
+            const formattedDate = formatDateTimeHelper(item.createdAt, timeZone, dateFormat, timeFormat);
+            return {
+                ...item,
+                formattedDate,
+                formattedCreatedAt: formattedDate,
+                createdAtFormatted: formattedDate
+            };
+        });
+        return res.status(200).json({
+            contacts: enrichedContacts
+        });
     } catch (error) {
         console.error("Error in get_contact_us:", error);
         return res.status(500).json({ message: "Server error", error: error.message });
@@ -197,8 +263,20 @@ const add_contact_us = async (req, res) => {
  */
 const get_subscribers = async (_req, res) => {
     try {
-        const subscribers = await Subscriber.find().sort({ createdAt: -1 });
-        return res.status(200).json(subscribers);
+        const subscribers = await Subscriber.find().sort({ createdAt: -1 }).lean();
+        const { timeZone, dateFormat, timeFormat } = await getMiscSettingsHelper();
+        const enrichedSubscribers = subscribers.map(item => {
+            const formattedDate = formatDateTimeHelper(item.createdAt, timeZone, dateFormat, timeFormat);
+            return {
+                ...item,
+                formattedDate,
+                formattedCreatedAt: formattedDate,
+                createdAtFormatted: formattedDate
+            };
+        });
+        return res.status(200).json({
+            subscribers: enrichedSubscribers
+        });
     } catch (error) {
         console.error("Error in get_subscribers:", error);
         return res.status(500).json({ message: "Server error", error: error.message });
