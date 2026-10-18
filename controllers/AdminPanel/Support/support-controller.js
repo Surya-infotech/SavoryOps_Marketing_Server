@@ -185,23 +185,6 @@ const add_contact_us = async (req, res) => {
     }
 };
 
-/**
- * Protected: Delete a Contact Us message
- */
-const delete_contact_us = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await ContactUs.findByIdAndDelete(id);
-        if (!deleted) {
-            return res.status(404).json({ success: false, message: "Message not found" });
-        }
-        return res.status(200).json({ success: true, message: "Message deleted successfully" });
-    } catch (error) {
-        console.error("Error in delete_contact_us:", error);
-        return res.status(500).json({ success: false, message: "Server error", error: error.message });
-    }
-};
-
 // ============================================================================
 // 3. SUBSCRIBERS
 // ============================================================================
@@ -283,7 +266,6 @@ module.exports = {
     delete_white_label,
     get_contact_us,
     add_contact_us,
-    delete_contact_us,
     get_subscribers,
     add_subscriber,
     delete_subscriber
