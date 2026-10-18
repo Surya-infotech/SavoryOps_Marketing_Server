@@ -13,7 +13,6 @@ supportRouter.route("/SubscribeNewsletter").post(supportController.add_subscribe
 supportRouter.route("/GetWhiteLabel").get(authMiddleware, supportController.get_white_label);
 supportRouter.route("/GetWhiteLabel/:id").get(authMiddleware, supportController.get_white_label_by_id);
 supportRouter.route("/UpdateWhiteLabelStatus/:id").put(authMiddleware, supportController.update_white_label_status);
-supportRouter.route("/DeleteWhiteLabel/:id").delete(authMiddleware, supportController.delete_white_label);
 
 supportRouter.route("/GetContactUs").get(authMiddleware, supportController.get_contact_us);
 supportRouter.route("/GetSubscribers").get(authMiddleware, supportController.get_subscribers);

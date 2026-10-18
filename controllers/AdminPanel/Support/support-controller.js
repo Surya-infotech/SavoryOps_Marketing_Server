@@ -113,23 +113,6 @@ const update_white_label_status = async (req, res) => {
 };
 
 /**
- * Protected: Delete a White-Label Inquiry
- */
-const delete_white_label = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await WhiteLabel.findByIdAndDelete(id);
-        if (!deleted) {
-            return res.status(404).json({ message: "Inquiry not found" });
-        }
-        return res.status(200).json({ success: true, message: "Inquiry deleted successfully" });
-    } catch (error) {
-        console.error("Error in delete_white_label:", error);
-        return res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
-
-/**
  * Support: Get all Contact Us messages
  */
 const get_contact_us = async (_req, res) => {
@@ -233,7 +216,6 @@ module.exports = {
     get_white_label,
     get_white_label_by_id,
     update_white_label_status,
-    delete_white_label,
     get_contact_us,
     add_contact_us,
     get_subscribers,
