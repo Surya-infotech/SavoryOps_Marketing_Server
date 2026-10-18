@@ -319,7 +319,7 @@ const add_subscriber = async (req, res) => {
         const activefiscalyear = await FiscalYear.findOne({ status: "Active" });
 
         const created = await Subscriber.create({
-            fiscalyearid: activefiscalyear,
+            fiscalyearid: activefiscalyear.fiscalyearid,
             email: normalizedEmail,
             source: source || "Marketing Website",
             createdAt: new Date().toISOString()
