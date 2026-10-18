@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
-    "server": "nodemon app.js"
+    "server": "nodemon app.js",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop savoryops-marketing-server",
+    "pm2:restart": "pm2 restart savoryops-marketing-server",
+    "pm2:logs": "pm2 logs savoryops-marketing-server"
   },
   "keywords": [],
   "author": "",
