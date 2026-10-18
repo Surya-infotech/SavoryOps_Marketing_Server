@@ -46,13 +46,22 @@ const get_dashboard = async (req, res) => {
                 ]
             }).lean();
 
-            if (fy && fy.startdate && fy.enddate) {
-                dateQuery = {
-                    createdAt: {
-                        $gte: fy.startdate,
-                        $lte: fy.enddate.length === 10 ? `${fy.enddate}T23:59:59.999Z` : fy.enddate
-                    }
-                };
+            if (fy) {
+                const orConditions = [];
+                if (fy.fiscalyearid) {
+                    orConditions.push({ fiscalyearid: fy.fiscalyearid });
+                }
+                if (fy.startdate && fy.enddate) {
+                    orConditions.push({
+                        createdAt: {
+                            $gte: fy.startdate,
+                            $lte: fy.enddate.length === 10 ? `${fy.enddate}T23:59:59.999Z` : fy.enddate
+                        }
+                    });
+                }
+                if (orConditions.length > 0) {
+                    dateQuery = { $or: orConditions };
+                }
             }
         }
 

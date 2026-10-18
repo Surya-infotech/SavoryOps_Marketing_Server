@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const subscriberSchema = new mongoose.Schema(
     {
+        fiscalyearid: {
+            type: Number,
+            required: true
+        },
         email: {
             type: String,
             required: true,

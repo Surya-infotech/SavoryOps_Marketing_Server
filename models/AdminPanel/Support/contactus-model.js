@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const contactUsSchema = new mongoose.Schema(
     {
+        fiscalyearid: {
+            type: Number,
+            required: true
+        },
         fullname: {
             type: String,
             required: [true, "Full name is required"],

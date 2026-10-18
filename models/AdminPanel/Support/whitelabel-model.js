@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const whiteLabelSchema = new mongoose.Schema(
     {
+        fiscalyearid: {
+            type: Number,
+            required: true
+        },
         fullName: {
             type: String,
             required: [true, "Full name is required"],

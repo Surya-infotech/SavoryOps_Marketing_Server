@@ -1,6 +1,7 @@
 const WhiteLabel = require("../../../models/AdminPanel/Support/whitelabel-model");
 const ContactUs = require("../../../models/AdminPanel/Support/contactus-model");
 const Subscriber = require("../../../models/AdminPanel/Support/subscriber-model");
+const FiscalYear = require("../../../models/AdminPanel/System/Setting/fiscalyear-model");
 const MiscSetting = require("../../../models/AdminPanel/System/Setting/miscsetting-model");
 const moment = require("moment-timezone");
 
@@ -56,7 +57,10 @@ const add_white_label = async (req, res) => {
             return res.status(400).json({ success: false, message: "Phone / WhatsApp number is required" });
         }
 
+        const activefiscalyear = await FiscalYear.findOne({ status: "Active" });
+
         const newInquiry = await WhiteLabel.create({
+            fiscalyearid: activefiscalyear.fiscalyearid,
             fullName: fullName.trim(),
             company: (company || "").trim(),
             email: email.trim().toLowerCase(),
@@ -235,7 +239,11 @@ const add_contact_us = async (req, res) => {
         if (!message || !message.trim()) {
             return res.status(400).json({ success: false, message: "Message is required" });
         }
+
+        const activefiscalyear = await FiscalYear.findOne({ status: "Active" });
+
         const created = await ContactUs.create({
+            fiscalyearid: activefiscalyear.fiscalyearid,
             fullname: resolvedName,
             email: email.trim().toLowerCase(),
             phone: (phone || "").trim(),
@@ -307,7 +315,11 @@ const add_subscriber = async (req, res) => {
                 data: existing
             });
         }
+
+        const activefiscalyear = await FiscalYear.findOne({ status: "Active" });
+
         const created = await Subscriber.create({
+            fiscalyearid: activefiscalyear,
             email: normalizedEmail,
             source: source || "Marketing Website",
             createdAt: new Date().toISOString()
